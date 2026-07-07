@@ -1,5 +1,6 @@
 # Install dependencies as needed:
 # pip install kagglehub[pandas-datasets]
+import shutil
 import pandas as pd
 import kagglehub
 from datetime import datetime
@@ -11,6 +12,8 @@ file_path = "GBvideos.csv"
 
 # Download latest version
 path = kagglehub.dataset_download("datasnaek/youtube-new")
+
+countries = ['CA', 'GB']
 
 print("Path to dataset files:", path)
 
@@ -35,10 +38,13 @@ def upload_to_azure_blob(local_file_path, connection_string, container_name, blo
 
 date = datetime.today().strftime('%Y-%m-%d')
 
-file_name = "C:\\Users\\OliverWray\\.cache\\kagglehub\\datasets\\datasnaek\\youtube-new\\versions\\115\\CAvideos.csv"
+file_name = "C:\\Users\\OliverWray\\.cache\\kagglehub\\datasets\\datasnaek\\youtube-new\\versions\\115\\GBvideos.csv"
 connection_string = ""
 file_name2 = file_name[-12:]  # Extract the last 12 characters of the file path
 container_name = "bob20"
 blob_name = f"{date}_{file_name2}"
 print(blob_name)
 upload_to_azure_blob(file_name, connection_string, container_name, blob_name)
+
+destination_directory = './code/data/CAdata.csv'
+shutil.copy(file_name, destination_directory)
