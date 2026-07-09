@@ -3,7 +3,7 @@ from typing import Tuple
 import pytest
 
 from techtask import PASSING_TESTS
-from techtask.app import Record, get_male_count, csv_to_records
+from techtask.app import Record, get_male_count, csv_to_records, get_unique_count, get_average_age, get_unique_count_and_clean_dob, exclude_duplicates_and_fuzzy_matches
 
 
 def test_01_can_count_number_of_males():
@@ -23,7 +23,6 @@ def test_01_can_count_number_of_males():
 
     assert actual_value_1 == 2
 
-    # Remove this comment to go to the next test
 
 
 @pytest.mark.skipif(PASSING_TESTS < 1, reason="You need to finish the first test!")
@@ -35,8 +34,8 @@ def test_02_load_some_data():
 
     This test ensures that we get a list of rows of data back.
 
-    Hint: Record is just a dataclass with four arguments that
-    match the header names of the csv.
+    Hint: Record is class with four arguments that
+    match the header names of the csv. (Defined in app.py)
     """
 
     records = csv_to_records(filepath="data/test_0.csv")
@@ -45,7 +44,6 @@ def test_02_load_some_data():
     for x in records:
         assert isinstance(x, Record)
 
-    # Remove this comment to go to the next test
 
 
 @pytest.mark.skipif(PASSING_TESTS < 2, reason="You need to finish the second test!")
@@ -64,10 +62,9 @@ def test_03_can_count_unique_input_data():
         Record(first_name="thomas", surname="skindstad", dob="18/06/1988", sex="m"),
     ]
 
-    actual_value_3 = None
+    actual_value_3 = get_unique_count(records)
     assert actual_value_3 == 3
 
-    # Remove this comment to go to the next test
 
 
 @pytest.mark.skipif(PASSING_TESTS < 3, reason="You need to finish the third test!")
@@ -87,10 +84,9 @@ def test_04_can_handle_unusual_birth_dates():
         Record(first_name="thomas", surname="skindstad", dob="01/05/1966", sex="m"),
     ]
 
-    actual_value_4 = None
+    actual_value_4 = get_unique_count_and_clean_dob(records)
     assert actual_value_4 == 4
 
-    # Remove this comment to go to the next test
 
 
 @pytest.mark.skipif(PASSING_TESTS < 4, reason="You need to finish the fourth test!")
@@ -107,10 +103,9 @@ def test_05_can_calculate_average_age_of_unique_people(average_age: int):
         Record("thomas", "skindstad", "18/06/1988", "m"),
     ]
 
-    actual_value_5 = None
+    actual_value_5 = get_average_age(records)
     assert actual_value_5 == average_age
 
-    # Remove this comment to go to the next test
 
 
 @pytest.mark.skipif(PASSING_TESTS < 5, reason="You need to finish the fifth test!")
@@ -131,10 +126,9 @@ def test_06_can_exclude_duplicates_and_fuzzy_matches():
         Record("john", "skindstad", "18/06/1989", "m"),
     ]
 
-    actual_value_6 = None
+    actual_value_6 = exclude_duplicates_and_fuzzy_matches(records)
     assert actual_value_6 == 4
 
-    # Remove this comment to go to the next test
 
 
 @pytest.mark.skipif(PASSING_TESTS < 6, reason="You need to finish the sixth test!")
@@ -160,4 +154,4 @@ def test_07_extra_credit(thousand_records: Tuple[list[Record], int]):
     actual = 0
     assert actual <= 1000 - number_of_duplicates
 
-    # Remove this comment to go to the next test (There is no next test ;) )
+    # Remove this comment to go to the next test (There is no next test :wink: )
