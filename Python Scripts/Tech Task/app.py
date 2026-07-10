@@ -113,39 +113,28 @@ def get_average_age(records: list) -> int:
 
     return int(total_age / len(unique_people))
 
-def exclude_duplicates_and_fuzzy_matches(records: list[Record]) -> int:
+def exclude_duplicates_and_fuzzy_matches(records: list) -> int:
     unique_records = []
 
     for record in records:
         is_duplicate = False
 
         for unique in unique_records:
-            # First, check if the "other data" (surname, dob, sex) matches exactly
-            if (record.surname.lower() == unique.surname.lower() and
-                record.dob == unique.dob and
-                record.sex.lower() == unique.sex.lower()):
-
-                # Next, do a fuzzy match on the first name
+            # First, check if the non-name data (dob, sex) matches exactly
+            if record.dob == unique.dob and record.sex.lower() == unique.sex.lower():
+                
+                # Now calculate the fuzzy match for BOTH names
                 name_similarity = difflib.SequenceMatcher(None, record.first_name.lower(), unique.first_name.lower()).ratio()
-                # What if the surnames are similar but not exact?
                 surname_similarity = difflib.SequenceMatcher(None, record.surname.lower(), unique.surname.lower()).ratio()
 
-                if name_similarity > 0.6 or surname_similarity > 0.6:
+                # If BOTH the first name and surname are at least 60% similar, it's a duplicate
+                if name_similarity > 0.6 and surname_similarity > 0.6:
                     is_duplicate = True
-                    break
-                elif name_similarity > 0.6:
-                    is_duplicate = True
-                    break
-                elif surname_similarity > 0.6:
-                    is_duplicate = True
-                    break
-                else:
-                    is_duplicate = False
-
+                    break 
 
         # If no duplicate was found, add it to our unique list
         if not is_duplicate:
             unique_records.append(record)
 
-    # The test expects an integer (4), so we return the count of unique records
+    # Return the count of unique records
     return len(unique_records)
