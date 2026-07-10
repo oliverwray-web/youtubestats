@@ -126,11 +126,9 @@ def exclude_duplicates_and_fuzzy_matches(records: list[Record]) -> int:
                 record.sex.lower() == unique.sex.lower()):
 
                 # Next, do a fuzzy match on the first name
-                name_similarity = difflib.SequenceMatcher(
-                    None,
-                    record.first_name.lower(),
-                    unique.first_name.lower()
-                ).ratio()
+                name_similarity = difflib.SequenceMatcher(None, record.first_name.lower(), unique.first_name.lower()).ratio()
+                # What if the surnames are similar but not exact?
+                surname_similarity = difflib.SequenceMatcher(None, record.surname.lower(), unique.surname.lower()).ratio()
 
 
                 # 'Wilyam' and 'William' have a similarity ratio of about 0.61. 
@@ -139,6 +137,9 @@ def exclude_duplicates_and_fuzzy_matches(records: list[Record]) -> int:
                     is_duplicate = True
                     # If this new record has an older DOB, you could swap it here if required by requirements,
                     # but since the DOBs already match exactly in our check above, we just mark it as a duplicate.
+                    break
+                if surname_similarity > 0.6:
+                    is_duplicate = True
                     break
 
         # If no duplicate was found, add it to our unique list
